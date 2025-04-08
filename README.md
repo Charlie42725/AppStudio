@@ -341,4 +341,10 @@ error: failed linking references.
 ERROR: /home/kali/AndroidStudioProjects/photo/app/src/main/res/layout/activity_main.xml:17: AAPT: error: attribute layout_constraintTop_toTopOf (aka com.example.photo:layout_constraintTop_toTopOf) not found.
 # AI debug...(skip)
 簡略來說：刪掉app/src/main/res/layout/activity_main.xml
-
+---
+# 我問
+長按沒有跳出文字，我透過logcat判斷確定沒有被偵測到，非常確定，請優化程式碼 
+# AI debug...(skip)
+簡略來說：外層手勢衝突
+以 combinedClickable 替代了「Button + pointerInput」，大幅降低手勢衝突。
+按鈕「短按」與「長按」皆可分開執行邏輯，長按事件中顯示 Toast，保證在大多數情況都能正常偵測。
