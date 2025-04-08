@@ -4,22 +4,21 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
-// 資料類別：圖片資源、名稱、藝術家、年份
+// 資料類別：圖片資源 & 名稱
 data class Artwork(
     val id: Int,
     val imageRes: Int,
@@ -32,7 +31,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // 只使用 Compose，不引用傳統 XML layout
             MaterialTheme {
                 ArtGalleryScreen()
             }
@@ -42,43 +40,35 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ArtGalleryScreen() {
-    // 準備 10 張圖
     val artworks = listOf(
-        Artwork(0, R.drawable.artwork1,  "作品名稱 1", "藝術家 A", "2020"),
-        Artwork(1, R.drawable.artwork2,  "作品名稱 2", "藝術家 B", "2019"),
-        Artwork(2, R.drawable.artwork3,  "作品名稱 3", "藝術家 C", "2021"),
-        Artwork(3, R.drawable.artwork4,  "作品名稱 4", "藝術家 D", "2018"),
-        Artwork(4, R.drawable.artwork5,  "作品名稱 5", "藝術家 E", "2017"),
-        Artwork(5, R.drawable.artwork6,  "作品名稱 6", "藝術家 F", "2022"),
-        Artwork(6, R.drawable.artwork7,  "作品名稱 7", "藝術家 G", "2023"),
-        Artwork(7, R.drawable.artwork8,  "作品名稱 8", "藝術家 H", "2021"),
-        Artwork(8, R.drawable.artwork9,  "作品名稱 9", "藝術家 I", "2020"),
-        Artwork(9, R.drawable.artwork10, "作品名稱 10","藝術家 J", "2015"),
+        Artwork(0, R.drawable.artwork1, "作品名稱 1", "藝術家 A", "2020"),
+        Artwork(1, R.drawable.artwork2, "作品名稱 2", "藝術家 B", "2019"),
+        Artwork(2, R.drawable.artwork3, "作品名稱 3", "藝術家 C", "2021")
+        // 如需更多，繼續加 artwork4, artwork5... etc
     )
 
-    // 追蹤當前顯示的索引
     var currentIndex by remember { mutableStateOf(0) }
     val currentArtwork = artworks[currentIndex]
-
     val context = LocalContext.current
 
-    // 監聽左右滑動 (Swiping)
+    // 外層可偵測左右滑動
     Box(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(currentIndex) {
                 detectHorizontalDragGestures { _, dragAmount ->
                     if (dragAmount < 0) {
-                        // 向左滑 => 下一張
-                        currentIndex = if (currentIndex == artworks.lastIndex) 0 else currentIndex + 1
+                        // 向左滑 => Next
+                        currentIndex =
+                            if (currentIndex == artworks.lastIndex) 0 else currentIndex + 1
                     } else if (dragAmount > 0) {
-                        // 向右滑 => 前一張
-                        currentIndex = if (currentIndex == 0) artworks.lastIndex else currentIndex - 1
+                        // 向右滑 => Previous
+                        currentIndex =
+                            if (currentIndex == 0) artworks.lastIndex else currentIndex - 1
                     }
                 }
             }
     ) {
-        // 佈局：圖片在上方、文字在中間、按鈕在下方
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -92,16 +82,17 @@ fun ArtGalleryScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp)
-                    .align(alignment = androidx.compose.ui.Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally)
             )
-            Spacer(modifier = Modifier.height(24.dp))
 
-            // 文字區（名稱、藝術家、年份）
+            Spacer(Modifier.height(24.dp))
+
+            // 顯示文字
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = currentArtwork.name,
@@ -119,45 +110,68 @@ fun ArtGalleryScreen() {
                     textAlign = TextAlign.Center
                 )
             }
-            Spacer(modifier = Modifier.height(24.dp))
 
-            // 前 / 後 按鈕
+            Spacer(Modifier.height(24.dp))
+
+            // 前後切換
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Previous
-                Button(
+                LongPressButton(
+                    text = "Previous",
                     onClick = {
                         currentIndex = if (currentIndex == 0) artworks.lastIndex else currentIndex - 1
                     },
-                    // 長按 => Toast 作為簡易 tooltip
-                    modifier = Modifier.pointerInput(Unit) {
-                        detectTapGestures(
-                            onLongPress = {
-                                Toast.makeText(context, "回到上一張圖片", Toast.LENGTH_SHORT).show()
-                            }
-                        )
+                    onLongPress = {
+                        Toast.makeText(context, "長按：切換到上一張", Toast.LENGTH_SHORT).show()
                     }
-                ) {
-                    Text("Previous")
-                }
-                // Next
-                Button(
+                )
+
+                LongPressButton(
+                    text = "Next",
                     onClick = {
                         currentIndex = if (currentIndex == artworks.lastIndex) 0 else currentIndex + 1
                     },
-                    modifier = Modifier.pointerInput(Unit) {
-                        detectTapGestures(
-                            onLongPress = {
-                                Toast.makeText(context, "切換到下一張圖片", Toast.LENGTH_SHORT).show()
-                            }
-                        )
+                    onLongPress = {
+                        Toast.makeText(context, "長按：切換到下一張", Toast.LENGTH_SHORT).show()
                     }
-                ) {
-                    Text("Next")
-                }
+                )
             }
+        }
+    }
+}
+
+// ------------------- 重點：定義 LongPressButton --------------------------------
+
+@OptIn(ExperimentalFoundationApi::class) // 若 IDE 提示需要實驗性API，可加此註解
+@Composable
+fun LongPressButton(
+    text: String,
+    onClick: () -> Unit,
+    onLongPress: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val indication = LocalIndication.current
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Surface(
+        color = MaterialTheme.colors.primary,
+        shape = MaterialTheme.shapes.small,
+        modifier = modifier
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = indication,
+                onClick = onClick,
+                onLongClick = onLongPress
+            )
+    ) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = text,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colors.onPrimary
+            )
         }
     }
 }

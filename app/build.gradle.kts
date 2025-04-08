@@ -1,5 +1,5 @@
 plugins {
-    // 由 settings.gradle.kts 決定版本，此處只寫 plugin ID
+    // 版本繼承自 settings.gradle.kts
     id("com.android.application")
     kotlin("android")
     id("org.jetbrains.kotlin.plugin.compose")
@@ -18,12 +18,12 @@ android {
         versionName = "1.0"
     }
 
-    // 開啟 Compose
+    // 啟用 Jetpack Compose
     buildFeatures {
         compose = true
     }
 
-    // 指定 Compose Compiler 版本
+    // 指定 Compose 編譯器版本
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.8"
     }
@@ -38,16 +38,17 @@ android {
 }
 
 dependencies {
+    // Compose 版本
     val composeUiVersion = "1.4.3"
 
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.activity:activity-compose:1.7.2")
 
-    // 如果只想用 Compose Material (M2) 中的按鈕、文字等組件
+    // Jetpack Compose Material (M2)
     implementation("androidx.compose.ui:ui:$composeUiVersion")
-    implementation("androidx.compose.material:material:$composeUiVersion") // M2
+    implementation("androidx.compose.material:material:$composeUiVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
 
-    // 開發除錯用
+    // 測試/除錯用
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
 }
