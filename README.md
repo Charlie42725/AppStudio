@@ -1,5 +1,5 @@
 # Android Photo Gallery App 開發紀錄
-#我提問
+# 我提問
 ## 🧑‍💻 Context
 你是一個 APP 開發的專家：
 
@@ -51,7 +51,7 @@
 
 ---
 
-＃AI答
+# AI答
 使用 Android Studio (Kotlin DSL) + Jetpack Compose 建立藝術作品展示 App
 本專案展示了如何使用 Jetpack Compose 製作一個圖片輪播展示應用，包含：
 
