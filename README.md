@@ -51,10 +51,6 @@
 
 ---
 
-## 🧾 Output Format（待補）
-
-👉 這份 md 是功能規格說明與程式碼撰寫前的準備紀錄，完整程式碼會在下一節補上。
-
 ＃AI答
 使用 Android Studio (Kotlin DSL) + Jetpack Compose 建立藝術作品展示 App
 本專案展示了如何使用 Jetpack Compose 製作一個圖片輪播展示應用，包含：
