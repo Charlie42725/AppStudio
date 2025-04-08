@@ -303,3 +303,12 @@ R.drawable.artworkX 對應的是這些圖檔。
 適用於教學展示、照片展示牆、藝術作品介紹 App 等場景。
 
 祝開發順利！🚀
+--
+# 我問
+Starting in Kotlin 2.0, the Compose Compiler Gradle plugin is required
+when compose is enabled. See the following link for more information:
+https://d.android.com/r/studio-ui/compose-compiler
+
+解決這個套用的問題，請直接傳給我完整的程式碼，我是使用Kotlin DSL
+
+# AI debug...(skip)
