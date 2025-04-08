@@ -1,4 +1,38 @@
 # Android Photo Gallery App 開發紀錄
+# 結論
+## 使用工具
+- Kotlin 2.0.21
+- Jetpack Compose (Material)
+- Android Studio Hedgehog
+- Gradle Kotlin DSL
+
+## Prompt 撰寫說明（如何下達指令）
+本次專案的需求透過以下 prompt 提出給 ChatGPT：
+> 使用 Kotlin DSL + Jetpack Compose 撰寫一個可以左右切換圖片、每張圖片有名稱與作者，並能夠在按鈕「長按」時顯示提示文字的 Android App。
+
+我進一步補充了：
+- 使用 `pointerInput + detectTapGestures` 來觸發 `onLongPress`
+- 出現長按偵測不到問題後，詢問是否能改為更穩定的寫法
+- 接著根據建議改為 `combinedClickable` 實作，並確認 Toast 正常顯示
+
+## 專案內容說明
+本專案包含以下內容：
+- `MainActivity.kt`：所有 UI 與邏輯皆透過 Compose 撰寫
+- 可在畫面上滑動切換藝術作品
+- 按下「Previous」「Next」可手動切換圖片
+- 長按按鈕時會顯示提示（使用 Toast）
+- 沒有使用 themes.xml，避免 AAPT linking 錯誤
+
+## 注意事項
+- 本專案已移除 `build/`、`.gradle/`、`.idea/` 等編譯產物與個人環境設定
+- 若助教要執行，請重新 Build 專案即可（不需額外設定）
+
+## 如何執行
+1. 用 Android Studio 開啟此資料夾
+2. 確保圖片已放入 `res/drawable/`
+3. Sync Gradle 並執行 `MainActivity`
+---
+＃以下對話
 # 我提問
 ## 🧑‍💻 Context
 你是一個 APP 開發的專家：
